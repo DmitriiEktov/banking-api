@@ -1,4 +1,4 @@
-package com.example.bankingapp.models;
+package com.example.bankingapi.enums;
 
 public enum AccountType {
     DEBIT, CREDIT, SAVINGS
