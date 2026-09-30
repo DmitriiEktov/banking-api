@@ -16,9 +16,19 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({AccountAlreadyAssignedException.class, AccountAlreadyFreeException.class, AccountNumberDuplicateException.class})
+    @ExceptionHandler({AccountAlreadyAssignedException.class, AccountAlreadyFreeException.class, AccountNumberDuplicateException.class, UsernameAlreadyExistsException.class})
     public ResponseEntity<Map<String, Object>> handleConflict(RuntimeException ex) {
         return buildErrorResponse(ex, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorized(RuntimeException ex) {
+        return buildErrorResponse(ex, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(org.springframework.security.authentication.DisabledException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(RuntimeException ex) {
+        return buildErrorResponse(ex, HttpStatus.FORBIDDEN);
     }
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(RuntimeException ex, HttpStatus status) {
