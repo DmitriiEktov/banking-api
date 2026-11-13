@@ -1,10 +1,8 @@
 package com.example.bankingapi;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class BankingAppApplicationTests {
+class BankingApiApplicationTests extends AbstractIntegrationTest {
 
     @Test
     void contextLoads() {

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1-create-clients" author="Dmitrii Ektov">
+        <createTable tableName="clients">
+            <column name="client_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birth_year" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="clients" columnNames="first_name, last_name, birth_year" constraintName="uq_clients_name_birth_year"/>
+        <sql>ALTER TABLE clients ADD CONSTRAINT check_birth_year CHECK (birth_year BETWEEN 1900 AND EXTRACT(YEAR FROM CURRENT_DATE))</sql>
+    </changeSet>
+
+    <changeSet id="2-create-accounts" author="Dmitrii Ektov">
+        <createTable tableName="accounts">
+            <column name="account_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="account_number" type="VARCHAR(23)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="account_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="NUMERIC(19, 2)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="accounts"
+                                 baseColumnNames="client_id"
+                                 constraintName="fk_accounts_clients"
+                                 referencedTableName="clients"
+                                 referencedColumnNames="client_id"
+                                 onDelete="SET NULL"/>
+
+        <sql>ALTER TABLE accounts ADD CONSTRAINT check_account_type CHECK (account_type IN ('DEBIT', 'CREDIT', 'SAVINGS'))</sql>
+        <sql>ALTER TABLE accounts ADD CONSTRAINT check_balance CHECK (balance >= 0)</sql>
+    </changeSet>
+
+    <changeSet id="3-create-users" author="Dmitrii Ektov">
+        <createTable tableName="users">
+            <column name="user_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>ALTER TABLE users ADD CONSTRAINT check_role CHECK (role IN ('USER', 'ADMIN'))</sql>
+    </changeSet>
+</databaseChangeLog>
