@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: ./mvnw -B clean verify
+        run: mvn -B clean verify
 
   # JOB 2: build and push Docker image
   build-and-push:
