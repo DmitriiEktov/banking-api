@@ -15,6 +15,7 @@
     <description>REST API for banking client and account management</description>
     <properties>
         <java.version>23</java.version>
+        <argLine></argLine>
     </properties>
     <dependencies>
         <!-- Spring Web -->
